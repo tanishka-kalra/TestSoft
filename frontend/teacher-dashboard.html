@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Engineering Test Platform</title>
+    <link rel="stylesheet" href="teacher-dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Engineering Test Platform</h1>
+                </div>
+                <div class="user-info">
+                    <span class="welcome-text">Welcome, Professor</span>
+                    <div class="user-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h2>Teacher Dashboard</h2>
+                <p>Manage your tests, questions, and view student analytics</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>125</h3>
+                        <p>Total Questions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>8</h3>
+                        <p>Active Tests</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>342</h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>78%</h3>
+                        <p>Average Score</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-grid">
+                <div class="action-card" onclick="navigateTo('create-questions')">
+                    <div class="action-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>Create Questions</h3>
+                        <p>Add new questions to your question bank. Support for multiple choice, short answer, and essay questions.</p>
+                        <div class="action-button">
+                            <span>Get Started</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-card" onclick="navigateTo('create-tests')">
+                    <div class="action-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>Create Tests</h3>
+                        <p>Design and schedule new tests. Set time limits, question pools, and assign to specific classes.</p>
+                        <div class="action-button">
+                            <span>Create Test</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-card" onclick="navigateTo('view-questions')">
+                    <div class="action-icon">
+                        <i class="fas fa-list"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>View Questions</h3>
+                        <p>Browse and manage your question bank. Filter by category, difficulty, and search by keywords.</p>
+                        <div class="action-button">
+                            <span>Browse Questions</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-card" onclick="navigateTo('analytics')">
+                    <div class="action-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="action-content">
+                        <h3>View Analytics</h3>
+                        <p>Analyze student performance, test results, and generate detailed reports for better insights.</p>
+                        <div class="action-button">
+                            <span>View Reports</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <div class="recent-activity">
+                <div class="section-header">
+                    <h3>Recent Activity</h3>
+                    <button class="view-all-btn">View All</button>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>John Smith</strong> completed "Data Structures Quiz"</p>
+                            <span class="activity-time">2 hours ago</span>
+                        </div>
+                        <div class="activity-score">
+                            <span class="score-badge">85%</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p>New question added to <strong>"Algorithms"</strong> category</p>
+                            <span class="activity-time">4 hours ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p>Test <strong>"Midterm Exam"</strong> published</p>
+                            <span class="activity-time">1 day ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="teacher-dashboard.js"></script>
+</body>
+</html>

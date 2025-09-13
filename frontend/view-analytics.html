@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Engineering Test Platform</title>
+    <link rel="stylesheet" href="view-analytics.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Engineering Test Platform</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="back-btn" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <button class="export-btn" onclick="exportAnalytics()">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Analytics Dashboard</h2>
+                <p>Monitor student performance, test results, and question effectiveness</p>
+            </div>
+
+            <!-- Time Period Filter -->
+            <div class="time-filter-section">
+                <div class="filter-header">
+                    <h3>Time Period</h3>
+                    <div class="time-filter-buttons">
+                        <button class="time-btn active" data-period="7">Last 7 Days</button>
+                        <button class="time-btn" data-period="30">Last 30 Days</button>
+                        <button class="time-btn" data-period="90">Last 3 Months</button>
+                        <button class="time-btn" data-period="365">Last Year</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Metrics Overview -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon success">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="avgScore">78.5%</h3>
+                        <p>Average Score</p>
+                        <span class="metric-change positive">+2.3% from last period</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="totalStudents">342</h3>
+                        <p>Active Students</p>
+                        <span class="metric-change positive">+15 new students</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon warning">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="testsCompleted">1,247</h3>
+                        <p>Tests Completed</p>
+                        <span class="metric-change positive">+8.7% from last period</span>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-icon danger">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3 id="failureRate">12.3%</h3>
+                        <p>Failure Rate</p>
+                        <span class="metric-change negative">-1.2% from last period</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <!-- Performance Trends -->
+                <div class="chart-container large">
+                    <div class="chart-header">
+                        <h3>Performance Trends</h3>
+                        <div class="chart-controls">
+                            <select id="trendMetric">
+                                <option value="average">Average Score</option>
+                                <option value="completion">Completion Rate</option>
+                                <option value="participation">Participation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-content">
+                        <canvas id="performanceTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Score Distribution -->
+                <div class="chart-container medium">
+                    <div class="chart-header">
+                        <h3>Score Distribution</h3>
+                    </div>
+                    <div class="chart-content">
+                        <canvas id="scoreDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Category Performance -->
+                <div class="chart-container medium">
+                    <div class="chart-header">
+                        <h3>Performance by Category</h3>
+                    </div>
+                    <div class="chart-content">
+                        <canvas id="categoryPerformanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analytics -->
+            <div class="analytics-grid">
+                <!-- Top Performers -->
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Top Performers</h3>
+                        <span class="period-indicator">This Month</span>
+                    </div>
+                    <div class="performers-list">
+                        <div class="performer-item">
+                            <div class="performer-rank">1</div>
+                            <div class="performer-info">
+                                <h4>Sarah Johnson</h4>
+                                <p>Computer Science</p>
+                            </div>
+                            <div class="performer-score">94.5%</div>
+                        </div>
+                        <div class="performer-item">
+                            <div class="performer-rank">2</div>
+                            <div class="performer-info">
+                                <h4>Michael Chen</h4>
+                                <p>Software Engineering</p>
+                            </div>
+                            <div class="performer-score">92.1%</div>
+                        </div>
+                        <div class="performer-item">
+                            <div class="performer-rank">3</div>
+                            <div class="performer-info">
+                                <h4>Emily Rodriguez</h4>
+                                <p>Data Science</p>
+                            </div>
+                            <div class="performer-score">91.8%</div>
+                        </div>
+                        <div class="performer-item">
+                            <div class="performer-rank">4</div>
+                            <div class="performer-info">
+                                <h4>David Kim</h4>
+                                <p>Computer Science</p>
+                            </div>
+                            <div class="performer-score">90.3%</div>
+                        </div>
+                        <div class="performer-item">
+                            <div class="performer-rank">5</div>
+                            <div class="performer-info">
+                                <h4>Lisa Wang</h4>
+                                <p>Software Engineering</p>
+                            </div>
+                            <div class="performer-score">89.7%</div>
+                        </div>
+                    </div>
+                    <button class="view-all-btn" onclick="viewAllStudents()">
+                        View All Students
+                    </button>
+                </div>
+
+                <!-- Difficult Questions -->
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Most Challenging Questions</h3>
+                        <span class="period-indicator">Low Success Rate</span>
+                    </div>
+                    <div class="questions-list">
+                        <div class="question-item">
+                            <div class="question-info">
+                                <h4>B+ Tree Operations</h4>
+                                <p>Database Systems</p>
+                                <span class="difficulty-tag hard">Hard</span>
+                            </div>
+                            <div class="question-stats">
+                                <div class="success-rate low">32%</div>
+                                <div class="attempts">127 attempts</div>
+                            </div>
+                        </div>
+                        <div class="question-item">
+                            <div class="question-info">
+                                <h4>Dynamic Programming</h4>
+                                <p>Algorithms</p>
+                                <span class="difficulty-tag hard">Hard</span>
+                            </div>
+                            <div class="question-stats">
+                                <div class="success-rate low">38%</div>
+                                <div class="attempts">89 attempts</div>
+                            </div>
+                        </div>
+                        <div class="question-item">
+                            <div class="question-info">
+                                <h4>Deadlock Prevention</h4>
+                                <p>Operating Systems</p>
+                                <span class="difficulty-tag medium">Medium</span>
+                            </div>
+                            <div class="question-stats">
+                                <div class="success-rate medium">45%</div>
+                                <div class="attempts">156 attempts</div>
+                            </div>
+                        </div>
+                        <div class="question-item">
+                            <div class="question-info">
+                                <h4>Network Protocols</h4>
+                                <p>Computer Networks</p>
+                                <span class="difficulty-tag medium">Medium</span>
+                            </div>
+                            <div class="question-stats">
+                                <div class="success-rate medium">52%</div>
+                                <div class="attempts">203 attempts</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="view-all-btn" onclick="viewAllQuestions()">
+                        Analyze All Questions
+                    </button>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Recent Test Activity</h3>
+                        <span class="period-indicator">Last 24 Hours</span>
+                    </div>
+                    <div class="activity-timeline">
+                        <div class="activity-item">
+                            <div class="activity-time">2 hours ago</div>
+                            <div class="activity-content">
+                                <strong>Data Structures Quiz</strong> completed by 23 students
+                                <div class="activity-stats">Avg Score: 85.3%</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">4 hours ago</div>
+                            <div class="activity-content">
+                                <strong>Algorithms Midterm</strong> started
+                                <div class="activity-stats">67 participants</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">6 hours ago</div>
+                            <div class="activity-content">
+                                <strong>Database Systems Quiz</strong> completed
+                                <div class="activity-stats">Avg Score: 78.9%</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-time">1 day ago</div>
+                            <div class="activity-content">
+                                <strong>Operating Systems Test</strong> published
+                                <div class="activity-stats">156 students enrolled</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="view-all-btn" onclick="viewTestHistory()">
+                        View Test History
+                    </button>
+                </div>
+
+                <!-- Study Patterns -->
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Study Patterns</h3>
+                        <span class="period-indicator">Peak Activity Hours</span>
+                    </div>
+                    <div class="chart-content small">
+                        <canvas id="studyPatternsChart"></canvas>
+                    </div>
+                    <div class="pattern-insights">
+                        <div class="insight-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Peak hours: 2:00 PM - 6:00 PM</span>
+                        </div>
+                        <div class="insight-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>Most active: Tuesday & Thursday</span>
+                        </div>
+                        <div class="insight-item">
+                            <i class="fas fa-trending-up"></i>
+                            <span>Study streak average: 4.2 days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights and Recommendations -->
+            <div class="insights-section">
+                <div class="insights-header">
+                    <h3>AI-Powered Insights & Recommendations</h3>
+                </div>
+                <div class="insights-grid">
+                    <div class="insight-card positive">
+                        <div class="insight-icon">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Improving Performance</h4>
+                            <p>Overall class performance has improved by 8.3% this month. Data Structures topics show the most significant improvement.</p>
+                        </div>
+                    </div>
+                    <div class="insight-card warning">
+                        <div class="insight-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Focus Area: Database Systems</h4>
+                            <p>Students are struggling with complex SQL queries and normalization. Consider additional practice sessions.</p>
+                        </div>
+                    </div>
+                    <div class="insight-card info">
+                        <div class="insight-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <div class="insight-content">
+                            <h4>Optimal Test Timing</h4>
+                            <p>Tests scheduled between 2-4 PM show 12% higher completion rates and better average scores.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Analytics Report</h3>
+                <button class="close-modal" onclick="closeExportModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <h4>Select Export Format:</h4>
+                    <div class="format-options">
+                        <label class="format-option">
+                            <input type="radio" name="exportFormat" value="pdf" checked>
+                            <div class="format-card">
+                                <i class="fas fa-file-pdf"></i>
+                                <span>PDF Report</span>
+                            </div>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="exportFormat" value="excel">
+                            <div class="format-card">
+                                <i class="fas fa-file-excel"></i>
+                                <span>Excel Spreadsheet</span>
+                            </div>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="exportFormat" value="csv">
+                            <div class="format-card">
+                                <i class="fas fa-file-csv"></i>
+                                <span>CSV Data</span>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <h4>Select Data Range:</h4>
+                    <div class="date-range">
+                        <div class="date-input">
+                            <label>From:</label>
+                            <input type="date" id="exportFromDate">
+                        </div>
+                        <div class="date-input">
+                            <label>To:</label>
+                            <input type="date" id="exportToDate">
+                        </div>
+                    </div>
+                    
+                    <h4>Include Sections:</h4>
+                    <div class="section-checkboxes">
+                        <label><input type="checkbox" checked> Performance Metrics</label>
+                        <label><input type="checkbox" checked> Student Rankings</label>
+                        <label><input type="checkbox" checked> Question Analysis</label>
+                        <label><input type="checkbox"> Detailed Logs</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeExportModal()">Cancel</button>
+                <button class="btn-primary" onclick="performExport()">
+                    <i class="fas fa-download"></i>
+                    Export Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="view-analytics.js"></script>
+</body>
+</html>

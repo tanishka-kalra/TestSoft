@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Questions - Engineering Test Platform</title>
+    <link rel="stylesheet" href="view-questions.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Engineering Test Platform</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="back-btn" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <button class="add-question-btn" onclick="createNewQuestion()">
+                        <i class="fas fa-plus"></i>
+                        Add Question
+                    </button>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Question Bank</h2>
+                <p>Browse, filter, and manage your questions</p>
+            </div>
+
+            <!-- Statistics Summary -->
+            <div class="stats-summary">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalQuestions">0</span>
+                    <span class="stat-label">Total Questions</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="filteredQuestions">0</span>
+                    <span class="stat-label">Filtered Results</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="selectedQuestions">0</span>
+                    <span class="stat-label">Selected</span>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section">
+                <div class="filters-header">
+                    <h3>Filters</h3>
+                    <button class="clear-filters-btn" onclick="clearAllFilters()">
+                        <i class="fas fa-times"></i>
+                        Clear All
+                    </button>
+                </div>
+
+                <div class="filters-content">
+                    <!-- Search Filter -->
+                    <div class="filter-group">
+                        <label>Search Questions</label>
+                        <div class="search-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search by question text, tags, or keywords...">
+                            <button class="clear-search" onclick="clearSearch()" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="filter-group">
+                        <label>Category</label>
+                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="data-structures">Data Structures</option>
+                            <option value="algorithms">Algorithms</option>
+                            <option value="database-systems">Database Systems</option>
+                            <option value="computer-networks">Computer Networks</option>
+                            <option value="operating-systems">Operating Systems</option>
+                            <option value="software-engineering">Software Engineering</option>
+                            <option value="programming">Programming</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Difficulty Filter -->
+                    <div class="filter-group">
+                        <label>Difficulty</label>
+                        <div class="difficulty-filters">
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="easy" class="difficulty-checkbox">
+                                <span class="difficulty-tag easy">
+                                    <i class="fas fa-star"></i>
+                                    Easy
+                                </span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="medium" class="difficulty-checkbox">
+                                <span class="difficulty-tag medium">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    Medium
+                                </span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="hard" class="difficulty-checkbox">
+                                <span class="difficulty-tag hard">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    Hard
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question Type Filter -->
+                    <div class="filter-group">
+                        <label>Question Type</label>
+                        <div class="type-filters">
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="mcq" class="type-checkbox">
+                                <span class="type-tag">
+                                    <i class="fas fa-check-circle"></i>
+                                    Single Choice
+                                </span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="multiselect" class="type-checkbox">
+                                <span class="type-tag">
+                                    <i class="fas fa-check-square"></i>
+                                    Multiple Choice
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Sort Options -->
+                    <div class="filter-group">
+                        <label>Sort By</label>
+                        <select id="sortBy">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="difficulty">Difficulty</option>
+                            <option value="category">Category</option>
+                            <option value="type">Question Type</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bulk Actions -->
+            <div class="bulk-actions" id="bulkActions" style="display: none;">
+                <div class="bulk-info">
+                    <span id="selectedCount">0</span> questions selected
+                </div>
+                <div class="bulk-buttons">
+                    <button class="bulk-btn" onclick="exportSelected()">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="bulk-btn danger" onclick="deleteSelected()">
+                        <i class="fas fa-trash"></i>
+                        Delete
+                    </button>
+                </div>
+            </div>
+
+            <!-- Questions List -->
+            <div class="questions-section">
+                <div class="questions-header">
+                    <div class="view-controls">
+                        <button class="view-btn active" data-view="card" onclick="switchView('card')">
+                            <i class="fas fa-th-large"></i>
+                            Cards
+                        </button>
+                        <button class="view-btn" data-view="list" onclick="switchView('list')">
+                            <i class="fas fa-list"></i>
+                            List
+                        </button>
+                    </div>
+                    <div class="select-all-container">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="selectAll">
+                            <span>Select All</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Questions Container -->
+                <div class="questions-container" id="questionsContainer">
+                    <!-- Questions will be dynamically loaded here -->
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3>No Questions Found</h3>
+                <p>Try adjusting your filters or create your first question.</p>
+                <button class="btn-primary" onclick="createNewQuestion()">
+                    <i class="fas fa-plus"></i>
+                    Create Question
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Question Detail Modal -->
+    <div id="questionModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Question Details</h3>
+                <button class="close-modal" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="questionDetailContent">
+                <!-- Question details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal()">Close</button>
+                <button class="btn-secondary" onclick="editQuestion()">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </button>
+                <button class="btn-danger" onclick="deleteQuestion()">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="view-questions.js"></script>
+</body>
+</html>

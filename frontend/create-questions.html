@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Questions - Engineering Test Platform</title>
+    <link rel="stylesheet" href="create-questions.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Engineering Test Platform</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="back-btn" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Create New Question</h2>
+                <p>Add questions to your question bank for engineering tests</p>
+            </div>
+
+            <div class="content-wrapper">
+                <!-- Question Form -->
+                <div class="question-form-container">
+                    <form id="questionForm" class="question-form">
+                        <!-- Question Type Selection -->
+                        <div class="form-section">
+                            <h3>Question Type</h3>
+                            <div class="question-type-selector">
+                                <div class="type-card active" data-type="mcq">
+                                    <div class="type-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h4>Multiple Choice (Single)</h4>
+                                    <p>Single correct answer</p>
+                                </div>
+                                <div class="type-card" data-type="multiselect">
+                                    <div class="type-icon">
+                                        <i class="fas fa-check-square"></i>
+                                    </div>
+                                    <h4>Multiple Choice (Multi)</h4>
+                                    <p>Multiple correct answers</p>
+                                </div>
+                                <div class="type-card" data-type="coding">
+                                    <div class="type-icon">
+                                        <i class="fas fa-code"></i>
+                                    </div>
+                                    <h4>Coding Question</h4>
+                                    <p>Programming problems with test cases</p>
+                                </div>
+                            </div>
+                            <input type="hidden" id="questionType" value="mcq">
+                        </div>
+
+                        <!-- Question Details -->
+                        <div class="form-section">
+                            <h3>Question Details</h3>
+                            
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="data-structures">Data Structures</option>
+                                    <option value="algorithms">Algorithms</option>
+                                    <option value="database-systems">Database Systems</option>
+                                    <option value="computer-networks">Computer Networks</option>
+                                    <option value="operating-systems">Operating Systems</option>
+                                    <option value="software-engineering">Software Engineering</option>
+                                    <option value="programming">Programming</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="difficulty">Difficulty Level</label>
+                                <div class="difficulty-selector">
+                                    <button type="button" class="difficulty-btn active" data-difficulty="easy">
+                                        <i class="fas fa-star"></i>
+                                        Easy
+                                    </button>
+                                    <button type="button" class="difficulty-btn" data-difficulty="medium">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        Medium
+                                    </button>
+                                    <button type="button" class="difficulty-btn" data-difficulty="hard">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        Hard
+                                    </button>
+                                </div>
+                                <input type="hidden" id="difficulty" value="easy">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="tags">Tags (Optional)</label>
+                                <input type="text" id="tags" placeholder="Enter tags separated by commas (e.g., array, sorting, binary-tree)">
+                                <div class="tags-container" id="tagsContainer"></div>
+                            </div>
+                        </div>
+
+                        <!-- Question Content -->
+                        <div class="form-section">
+                            <h3>Question Content</h3>
+                            
+                            <div class="form-group">
+                                <label for="questionText">Question Text</label>
+                                <textarea id="questionText" rows="4" placeholder="Enter your question here..." required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="questionImage">Question Image (Optional)</label>
+                                <div class="file-upload-area" id="imageUpload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload image or drag and drop</p>
+                                    <input type="file" id="questionImage" accept="image/*" hidden>
+                                </div>
+                                <div id="imagePreview" class="image-preview"></div>
+                            </div>
+                        </div>
+
+                        <!-- Answer Options -->
+                        <div class="form-section">
+                            <h3>Answer Options</h3>
+                            <p class="section-description" id="optionsDescription">
+                                Add answer options. Select the correct answer by clicking the radio button.
+                            </p>
+                            
+                            <div class="options-container" id="optionsContainer">
+                                <!-- Options will be dynamically added here -->
+                            </div>
+                            
+                            <button type="button" class="add-option-btn" onclick="addOption()">
+                                <i class="fas fa-plus"></i>
+                                Add Option
+                            </button>
+                        </div>
+
+                        <!-- Coding Question Sections (only visible for coding type) -->
+                        <div class="form-section coding-sections" id="codingSections" style="display: none;">
+                            <!-- Problem Statement -->
+                            <div class="coding-subsection">
+                                <h4>Problem Statement</h4>
+                                <div class="form-group">
+                                    <label for="problemDescription">Problem Description</label>
+                                    <textarea id="problemDescription" rows="6" placeholder="Describe the problem clearly with requirements, constraints, and any additional context..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Input/Output Format -->
+                            <div class="coding-subsection">
+                                <h4>Input/Output Format</h4>
+                                <div class="io-format-grid">
+                                    <div class="form-group">
+                                        <label for="inputFormat">Input Format</label>
+                                        <textarea id="inputFormat" rows="3" placeholder="Describe the input format..."></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="outputFormat">Output Format</label>
+                                        <textarea id="outputFormat" rows="3" placeholder="Describe the expected output format..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Constraints -->
+                            <div class="coding-subsection">
+                                <h4>Constraints</h4>
+                                <div class="form-group">
+                                    <label for="constraints">Constraints</label>
+                                    <textarea id="constraints" rows="2" placeholder="List the constraints (e.g., 1 ≤ n ≤ 10^5, 1 ≤ arr[i] ≤ 1000)"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Test Cases -->
+                            <div class="coding-subsection">
+                                <h4>Test Cases</h4>
+                                <p class="section-description">Add example test cases to help students understand the problem.</p>
+                                
+                                <div class="test-cases-container" id="testCasesContainer">
+                                    <!-- Test cases will be added dynamically -->
+                                </div>
+                                
+                                <button type="button" class="add-test-case-btn" onclick="addTestCase()">
+                                    <i class="fas fa-plus"></i>
+                                    Add Test Case
+                                </button>
+                            </div>
+
+                            <!-- Solution Template (Optional) -->
+                            <div class="coding-subsection">
+                                <h4>Solution Template (Optional)</h4>
+                                <div class="form-group">
+                                    <label for="solutionTemplate">Code Template</label>
+                                    <div class="code-editor-container">
+                                        <div class="language-selector">
+                                            <select id="templateLanguage">
+                                                <option value="python">Python</option>
+                                                <option value="java">Java</option>
+                                                <option value="cpp">C++</option>
+                                                <option value="javascript">JavaScript</option>
+                                                <option value="c">C</option>
+                                            </select>
+                                        </div>
+                                        <textarea id="solutionTemplate" rows="8" placeholder="Provide a code template for students (function signature, imports, etc.)..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Evaluation Criteria -->
+                            <div class="coding-subsection">
+                                <h4>Evaluation Criteria</h4>
+                                <div class="evaluation-grid">
+                                    <div class="form-group">
+                                        <label for="timeLimit">Time Limit (seconds)</label>
+                                        <input type="number" id="timeLimit" min="1" max="60" value="5" placeholder="5">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="memoryLimit">Memory Limit (MB)</label>
+                                        <input type="number" id="memoryLimit" min="16" max="512" value="128" placeholder="128">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Question Explanation -->
+                        <div class="form-section">
+                            <h3>Explanation (Optional)</h3>
+                            <div class="form-group">
+                                <label for="explanation">Explanation</label>
+                                <textarea id="explanation" rows="3" placeholder="Provide an explanation for the correct answer..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i>
+                                Reset
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="previewQuestion()">
+                                <i class="fas fa-eye"></i>
+                                Preview
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Question
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Question Preview Panel -->
+                <div class="preview-panel" id="previewPanel">
+                    <div class="preview-header">
+                        <h3>Question Preview</h3>
+                        <button class="close-preview" onclick="closePreview()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="preview-content" id="previewContent">
+                        <!-- Preview will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Question Saved Successfully!</h3>
+                <button class="close-modal" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <p>Your question has been added to the question bank.</p>
+                <div class="modal-actions">
+                    <button class="btn-secondary" onclick="createAnother()">
+                        Create Another
+                    </button>
+                    <button class="btn-primary" onclick="goBack()">
+                        Back to Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="create-questions.js"></script>
+</body>
+</html>
