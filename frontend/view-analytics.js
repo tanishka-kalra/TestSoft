@@ -81,18 +81,18 @@ document.addEventListener('DOMContentLoaded', function() {
 // Initialize analytics dashboard
 function initializeAnalytics() {
     console.log('Analytics dashboard initialized');
-    
+
     // Set default time filter
     const defaultFilter = document.querySelector('.time-btn[data-period="30"]');
     if (defaultFilter) {
         defaultFilter.classList.add('active');
     }
-    
+
     // Set current date for export modal
     const today = new Date();
     const fromDate = new Date(today.setDate(today.getDate() - 30));
     const toDate = new Date();
-    
+
     document.getElementById('exportFromDate').value = fromDate.toISOString().split('T')[0];
     document.getElementById('exportToDate').value = toDate.toISOString().split('T')[0];
 }
@@ -104,12 +104,12 @@ function setupEventListeners() {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            
+
             const period = this.getAttribute('data-period');
             updateDataForPeriod(period);
         });
     });
-    
+
     // Chart controls
     const trendMetricSelect = document.getElementById('trendMetric');
     if (trendMetricSelect) {
@@ -117,7 +117,7 @@ function setupEventListeners() {
             updatePerformanceTrendChart(this.value);
         });
     }
-    
+
     // Close modal when clicking outside
     document.getElementById('exportModal').addEventListener('click', function(e) {
         if (e.target === this) {
@@ -134,7 +134,7 @@ function updateMetrics() {
         testsCompleted: Math.floor(Math.random() * 500) + 1000,
         failureRate: (Math.random() * 10 + 5).toFixed(1) + '%'
     };
-    
+
     Object.keys(metrics).forEach(key => {
         const element = document.getElementById(key);
         if (element) {
@@ -155,7 +155,7 @@ function initializeCharts() {
 function initializePerformanceTrendChart() {
     const ctx = document.getElementById('performanceTrendChart');
     if (!ctx) return;
-    
+
     performanceTrendChart = new Chart(ctx, {
         type: 'line',
         data: analyticsData.performanceTrends,
@@ -208,7 +208,7 @@ function initializePerformanceTrendChart() {
 function initializeScoreDistributionChart() {
     const ctx = document.getElementById('scoreDistributionChart');
     if (!ctx) return;
-    
+
     scoreDistributionChart = new Chart(ctx, {
         type: 'doughnut',
         data: analyticsData.scoreDistribution,
@@ -233,7 +233,7 @@ function initializeScoreDistributionChart() {
 function initializeCategoryPerformanceChart() {
     const ctx = document.getElementById('categoryPerformanceChart');
     if (!ctx) return;
-    
+
     categoryPerformanceChart = new Chart(ctx, {
         type: 'bar',
         data: analyticsData.categoryPerformance,
@@ -277,7 +277,7 @@ function initializeCategoryPerformanceChart() {
 function initializeStudyPatternsChart() {
     const ctx = document.getElementById('studyPatternsChart');
     if (!ctx) return;
-    
+
     studyPatternsChart = new Chart(ctx, {
         type: 'bar',
         data: analyticsData.studyPatterns,
@@ -314,7 +314,7 @@ function initializeStudyPatternsChart() {
 // Update data for selected time period
 function updateDataForPeriod(period) {
     console.log(`Updating data for ${period} days period`);
-    
+
     // Simulate data update based on period
     let multiplier = 1;
     switch(period) {
@@ -331,10 +331,10 @@ function updateDataForPeriod(period) {
             multiplier = 1.2;
             break;
     }
-    
+
     // Update metrics
     updateMetrics();
-    
+
     // Update charts with new data
     updateChartsData(multiplier);
 }
@@ -343,17 +343,17 @@ function updateDataForPeriod(period) {
 function updateChartsData(multiplier) {
     // Update performance trend chart
     if (performanceTrendChart) {
-        performanceTrendChart.data.datasets[0].data = 
-            performanceTrendChart.data.datasets[0].data.map(value => 
+        performanceTrendChart.data.datasets[0].data =
+            performanceTrendChart.data.datasets[0].data.map(value =>
                 Math.min(100, Math.max(0, Math.round(value * multiplier)))
             );
         performanceTrendChart.update('active');
     }
-    
+
     // Update category performance chart
     if (categoryPerformanceChart) {
-        categoryPerformanceChart.data.datasets[0].data = 
-            categoryPerformanceChart.data.datasets[0].data.map(value => 
+        categoryPerformanceChart.data.datasets[0].data =
+            categoryPerformanceChart.data.datasets[0].data.map(value =>
                 Math.min(100, Math.max(0, Math.round(value * multiplier)))
             );
         categoryPerformanceChart.update('active');
@@ -363,7 +363,7 @@ function updateChartsData(multiplier) {
 // Update performance trend chart based on metric selection
 function updatePerformanceTrendChart(metric) {
     if (!performanceTrendChart) return;
-    
+
     let newData = [];
     switch(metric) {
         case 'average':
@@ -376,7 +376,7 @@ function updatePerformanceTrendChart(metric) {
             newData = [78, 82, 85, 83, 87, 90];
             break;
     }
-    
+
     performanceTrendChart.data.datasets[0].data = newData;
     performanceTrendChart.data.datasets[0].label = metric.charAt(0).toUpperCase() + metric.slice(1);
     performanceTrendChart.update('active');
@@ -386,7 +386,7 @@ function updatePerformanceTrendChart(metric) {
 function startRealTimeUpdates() {
     // Update metrics every 30 seconds
     setInterval(updateMetrics, 30000);
-    
+
     // Update charts every 2 minutes
     setInterval(() => {
         const randomMultiplier = 0.95 + Math.random() * 0.1; // 0.95 to 1.05
@@ -418,31 +418,31 @@ function performExport() {
     const format = document.querySelector('input[name="exportFormat"]:checked').value;
     const fromDate = document.getElementById('exportFromDate').value;
     const toDate = document.getElementById('exportToDate').value;
-    
+
     // Get selected sections
     const sections = [];
     document.querySelectorAll('.section-checkboxes input:checked').forEach(checkbox => {
         sections.push(checkbox.parentElement.textContent.trim());
     });
-    
+
     // Simulate export process
     const loadingBtn = document.querySelector('.btn-primary');
     const originalText = loadingBtn.innerHTML;
-    
+
     loadingBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Exporting...';
     loadingBtn.disabled = true;
-    
+
     setTimeout(() => {
         // Reset button
         loadingBtn.innerHTML = originalText;
         loadingBtn.disabled = false;
-        
+
         // Close modal
         closeExportModal();
-        
+
         // Show success message
         alert(`Analytics report exported successfully!\n\nFormat: ${format.toUpperCase()}\nPeriod: ${fromDate} to ${toDate}\nSections: ${sections.length}`);
-        
+
         // In a real application, this would trigger actual file download
         console.log('Export details:', { format, fromDate, toDate, sections });
     }, 2000);

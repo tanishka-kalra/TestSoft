@@ -15,19 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializePage() {
     console.log('Create Questions page initialized');
-    
+
     // Setup question type selector
     setupQuestionTypeSelector();
-    
+
     // Setup difficulty selector
     setupDifficultySelector();
-    
+
     // Setup file upload
     setupFileUpload();
-    
+
     // Setup tags input
     setupTagsInput();
-    
+
     // Setup form validation
     setupFormValidation();
 }
@@ -35,7 +35,7 @@ function initializePage() {
 function setupEventListeners() {
     // Form submission
     document.getElementById('questionForm').addEventListener('submit', handleFormSubmit);
-    
+
     // Preview button
     document.addEventListener('click', function(e) {
         if (e.target.closest('.btn-secondary') && e.target.closest('.btn-secondary').onclick) {
@@ -50,21 +50,21 @@ function setupQuestionTypeSelector() {
     const optionsDescription = document.getElementById('optionsDescription');
     const optionsSection = document.querySelector('.form-section:has(#optionsContainer)');
     const codingSections = document.getElementById('codingSections');
-    
+
     typeCards.forEach(card => {
         card.addEventListener('click', function() {
             if (this.classList.contains('disabled')) return;
-            
+
             // Remove active class from all cards
             typeCards.forEach(c => c.classList.remove('active'));
-            
+
             // Add active class to clicked card
             this.classList.add('active');
-            
+
             // Update hidden input
             const type = this.dataset.type;
             questionType.value = type;
-            
+
             if (type === 'coding') {
                 // Show coding sections, hide options section
                 optionsSection.style.display = 'none';
@@ -73,7 +73,7 @@ function setupQuestionTypeSelector() {
                 // Show options section, hide coding sections
                 optionsSection.style.display = 'block';
                 codingSections.style.display = 'none';
-                
+
                 // Update description and regenerate options
                 updateOptionsDescription(type);
                 regenerateOptions();
@@ -85,15 +85,15 @@ function setupQuestionTypeSelector() {
 function setupDifficultySelector() {
     const difficultyBtns = document.querySelectorAll('.difficulty-btn');
     const difficultyInput = document.getElementById('difficulty');
-    
+
     difficultyBtns.forEach(btn => {
         btn.addEventListener('click', function() {
             // Remove active class from all buttons
             difficultyBtns.forEach(b => b.classList.remove('active'));
-            
+
             // Add active class to clicked button
             this.classList.add('active');
-            
+
             // Update hidden input
             difficultyInput.value = this.dataset.difficulty;
         });
@@ -104,18 +104,18 @@ function setupFileUpload() {
     const uploadArea = document.getElementById('imageUpload');
     const fileInput = document.getElementById('questionImage');
     const preview = document.getElementById('imagePreview');
-    
+
     uploadArea.addEventListener('click', () => fileInput.click());
-    
+
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadArea.classList.add('drag-over');
     });
-    
+
     uploadArea.addEventListener('dragleave', () => {
         uploadArea.classList.remove('drag-over');
     });
-    
+
     uploadArea.addEventListener('drop', (e) => {
         e.preventDefault();
         uploadArea.classList.remove('drag-over');
@@ -124,7 +124,7 @@ function setupFileUpload() {
             handleImageUpload(files[0]);
         }
     });
-    
+
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
             handleImageUpload(e.target.files[0]);
@@ -137,12 +137,12 @@ function handleImageUpload(file) {
         alert('Please select a valid image file.');
         return;
     }
-    
+
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
         alert('Image size should be less than 5MB.');
         return;
     }
-    
+
     const reader = new FileReader();
     reader.onload = function(e) {
         uploadedImage = e.target.result;
@@ -174,7 +174,7 @@ function removeImage() {
 
 function setupTagsInput() {
     const tagsInput = document.getElementById('tags');
-    
+
     tagsInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter' || e.key === ',') {
             e.preventDefault();
@@ -182,7 +182,7 @@ function setupTagsInput() {
             this.value = '';
         }
     });
-    
+
     tagsInput.addEventListener('blur', function() {
         if (this.value.trim()) {
             addTag(this.value.trim());
@@ -193,7 +193,7 @@ function setupTagsInput() {
 
 function addTag(tagText) {
     if (!tagText || tagsArray.includes(tagText)) return;
-    
+
     tagsArray.push(tagText);
     updateTagsDisplay();
 }
@@ -239,7 +239,7 @@ function addInitialTestCase() {
 function addTestCase(isExample = false) {
     const container = document.getElementById('testCasesContainer');
     const testCaseId = `testcase_${testCaseCounter}`;
-    
+
     const testCaseHtml = `
         <div class="test-case-item" data-test-case-id="${testCaseCounter}">
             <div class="test-case-header">
@@ -251,12 +251,12 @@ function addTestCase(isExample = false) {
                 </div>
                 <div class="test-case-type">
                     <label class="type-radio">
-                        <input type="radio" name="type_${testCaseCounter}" value="example" ${isExample ? 'checked' : ''} 
+                        <input type="radio" name="type_${testCaseCounter}" value="example" ${isExample ? 'checked' : ''}
                                onchange="updateTestCaseType(${testCaseCounter}, 'example')">
                         Example
                     </label>
                     <label class="type-radio">
-                        <input type="radio" name="type_${testCaseCounter}" value="hidden" ${!isExample ? 'checked' : ''} 
+                        <input type="radio" name="type_${testCaseCounter}" value="hidden" ${!isExample ? 'checked' : ''}
                                onchange="updateTestCaseType(${testCaseCounter}, 'hidden')">
                         Hidden
                     </label>
@@ -277,7 +277,7 @@ function addTestCase(isExample = false) {
             </div>
         </div>
     `;
-    
+
     container.insertAdjacentHTML('beforeend', testCaseHtml);
     testCaseCounter++;
 }
@@ -315,7 +315,7 @@ function addOption() {
     const optionId = `option_${optionCounter}`;
     const inputType = questionType === 'mcq' ? 'radio' : 'checkbox';
     const inputName = questionType === 'mcq' ? 'correctAnswer' : 'correctAnswers';
-    
+
     const optionHtml = `
         <div class="option-item" data-option-id="${optionCounter}">
             <div class="option-selector">
@@ -329,10 +329,10 @@ function addOption() {
             </div>
         </div>
     `;
-    
+
     container.insertAdjacentHTML('beforeend', optionHtml);
     optionCounter++;
-    
+
     // Ensure minimum 2 options
     updateRemoveButtons();
 }
@@ -348,7 +348,7 @@ function removeOption(optionId) {
 function updateRemoveButtons() {
     const options = document.querySelectorAll('.option-item');
     const removeButtons = document.querySelectorAll('.remove-option-btn');
-    
+
     // Disable remove buttons if only 2 options left
     removeButtons.forEach(btn => {
         btn.disabled = options.length <= 2;
@@ -362,7 +362,7 @@ function regenerateOptions() {
     const container = document.getElementById('optionsContainer');
     container.innerHTML = '';
     optionCounter = 0;
-    
+
     // Add initial options
     addInitialOptions();
 }
@@ -372,7 +372,7 @@ function previewQuestion() {
     if (!validateFormData(formData, false)) {
         return;
     }
-    
+
     generatePreview(formData);
     showPreview();
 }
@@ -383,7 +383,7 @@ function gatherFormData() {
     const difficulty = document.getElementById('difficulty').value;
     const questionText = document.getElementById('questionText').value;
     const explanation = document.getElementById('explanation').value;
-    
+
     if (questionType === 'coding') {
         // Gather coding question data
         const problemDescription = document.getElementById('problemDescription').value;
@@ -394,14 +394,14 @@ function gatherFormData() {
         const templateLanguage = document.getElementById('templateLanguage').value;
         const timeLimit = document.getElementById('timeLimit').value;
         const memoryLimit = document.getElementById('memoryLimit').value;
-        
+
         // Gather test cases
         const testCases = [];
         document.querySelectorAll('.test-case-item').forEach((item, index) => {
             const input = item.querySelector('.test-case-input textarea').value;
             const output = item.querySelector('.test-case-output textarea').value;
             const isExample = item.querySelector('input[value="example"]').checked;
-            
+
             testCases.push({
                 id: index,
                 input: input,
@@ -409,7 +409,7 @@ function gatherFormData() {
                 isExample: isExample
             });
         });
-        
+
         return {
             questionType,
             category,
@@ -432,22 +432,22 @@ function gatherFormData() {
         // Gather MCQ/Multiselect data
         const options = [];
         const correctAnswers = [];
-        
+
         document.querySelectorAll('.option-item').forEach((item, index) => {
             const text = item.querySelector('.option-input').value;
             const isCorrect = item.querySelector('input[type="radio"], input[type="checkbox"]').checked;
-            
+
             options.push({
                 id: index,
                 text: text,
                 isCorrect: isCorrect
             });
-            
+
             if (isCorrect) {
                 correctAnswers.push(index);
             }
         });
-        
+
         return {
             questionType,
             category,
@@ -464,39 +464,39 @@ function gatherFormData() {
 
 function validateFormData(formData, showAlerts = true) {
     const errors = [];
-    
+
     if (!formData.category) {
         errors.push('Please select a category');
     }
-    
+
     if (!formData.questionText.trim()) {
         errors.push('Please enter the question text');
     }
-    
+
     if (formData.questionType === 'coding') {
         // Validate coding question specific fields
         if (!formData.problemDescription.trim()) {
             errors.push('Please enter the problem description');
         }
-        
+
         if (formData.testCases.length === 0) {
             errors.push('Please add at least one test case');
         }
-        
+
         const emptyTestCases = formData.testCases.filter(tc => !tc.input.trim() || !tc.expectedOutput.trim());
         if (emptyTestCases.length > 0) {
             errors.push('Please fill in all test case inputs and outputs');
         }
-        
+
         const exampleTestCases = formData.testCases.filter(tc => tc.isExample);
         if (exampleTestCases.length === 0) {
             errors.push('Please mark at least one test case as an example');
         }
-        
+
         if (formData.timeLimit < 1 || formData.timeLimit > 60) {
             errors.push('Time limit must be between 1 and 60 seconds');
         }
-        
+
         if (formData.memoryLimit < 16 || formData.memoryLimit > 512) {
             errors.push('Memory limit must be between 16 and 512 MB');
         }
@@ -505,32 +505,32 @@ function validateFormData(formData, showAlerts = true) {
         if (formData.options.length < 2) {
             errors.push('Please add at least 2 options');
         }
-        
+
         const emptyOptions = formData.options.filter(opt => !opt.text.trim());
         if (emptyOptions.length > 0) {
             errors.push('Please fill in all option texts');
         }
-        
+
         if (formData.correctAnswers.length === 0) {
             errors.push('Please select at least one correct answer');
         }
-        
+
         if (formData.questionType === 'mcq' && formData.correctAnswers.length > 1) {
             errors.push('Single choice questions can have only one correct answer');
         }
     }
-    
+
     if (errors.length > 0 && showAlerts) {
         alert('Please fix the following errors:\\n\\n' + errors.join('\\n'));
     }
-    
+
     return errors.length === 0;
 }
 
 function generatePreview(formData) {
     const previewContent = document.getElementById('previewContent');
     let previewHtml = '';
-    
+
     if (formData.questionType === 'coding') {
         // Generate coding question preview
         previewHtml = `
@@ -540,16 +540,16 @@ function generatePreview(formData) {
                     <span class="category-badge">${formData.category.replace('-', ' ').toUpperCase()}</span>
                     <span class="type-badge coding">CODING</span>
                 </div>
-                
+
                 <h4>${formData.questionText}</h4>
-                
+
                 ${formData.problemDescription ? `
                     <div class="problem-description">
                         <h5>Problem Description:</h5>
                         <p>${formData.problemDescription}</p>
                     </div>
                 ` : ''}
-                
+
                 ${formData.inputFormat || formData.outputFormat ? `
                     <div class="io-format">
                         ${formData.inputFormat ? `
@@ -566,14 +566,14 @@ function generatePreview(formData) {
                         ` : ''}
                     </div>
                 ` : ''}
-                
+
                 ${formData.constraints ? `
                     <div class="constraints">
                         <h6>Constraints:</h6>
                         <p>${formData.constraints}</p>
                     </div>
                 ` : ''}
-                
+
                 ${formData.testCases.filter(tc => tc.isExample).length > 0 ? `
                     <div class="example-cases">
                         <h6>Example Test Cases:</h6>
@@ -591,13 +591,13 @@ function generatePreview(formData) {
                         `).join('')}
                     </div>
                 ` : ''}
-                
+
                 <div class="evaluation-info">
                     <div class="time-limit">Time Limit: ${formData.timeLimit}s</div>
                     <div class="memory-limit">Memory Limit: ${formData.memoryLimit}MB</div>
                     <div class="total-cases">Total Test Cases: ${formData.testCases.length}</div>
                 </div>
-                
+
                 ${formData.solutionTemplate ? `
                     <div class="solution-template">
                         <h6>Code Template (${formData.templateLanguage}):</h6>
@@ -613,7 +613,7 @@ function generatePreview(formData) {
             'medium': '★★',
             'hard': '★★★'
         };
-        
+
         previewHtml = `
             <div class="preview-question">
                 <div class="question-meta">
@@ -621,14 +621,14 @@ function generatePreview(formData) {
                     <span class="difficulty-badge">${difficultyStars[formData.difficulty]} ${formData.difficulty.toUpperCase()}</span>
                     <span class="type-badge">${formData.questionType === 'mcq' ? 'SINGLE CHOICE' : 'MULTIPLE CHOICE'}</span>
                 </div>
-                
+
                 <h4>${formData.questionText}</h4>
         `;
-        
+
         if (formData.image) {
             previewHtml += `<img src="${formData.image}" alt="Question Image" style="max-width: 100%; margin: 1rem 0; border-radius: 6px;">`;
         }
-        
+
         previewHtml += `
                 <div class="preview-options">
                     ${formData.options.map((option, index) => `
@@ -642,7 +642,7 @@ function generatePreview(formData) {
             </div>
         `;
     }
-    
+
     if (formData.explanation) {
         previewHtml += `
             <div class="explanation-preview">
@@ -651,7 +651,7 @@ function generatePreview(formData) {
             </div>
         `;
     }
-    
+
     if (formData.tags.length > 0) {
         previewHtml += `
             <div class="tags-preview">
@@ -659,7 +659,7 @@ function generatePreview(formData) {
             </div>
         `;
     }
-    
+
     previewContent.innerHTML = previewHtml;
 }
 
@@ -673,23 +673,23 @@ function closePreview() {
 
 function handleFormSubmit(e) {
     e.preventDefault();
-    
+
     const formData = gatherFormData();
     if (!validateFormData(formData)) {
         return;
     }
-    
+
     // Simulate saving the question
     console.log('Saving question:', formData);
-    
+
     // Show loading state
     showSaveLoading();
-    
+
     // Simulate API call
     setTimeout(() => {
         hideSaveLoading();
         showSuccessModal();
-        
+
         // Store the question (in a real app, this would be sent to a server)
         storeQuestion(formData);
     }, 1500);
@@ -710,17 +710,17 @@ function hideSaveLoading() {
 function storeQuestion(formData) {
     // In a real application, this would send data to a server
     const existingQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
-    
+
     const question = {
         id: Date.now(),
         ...formData,
         createdAt: new Date().toISOString(),
         createdBy: 'Professor' // In real app, get from user session
     };
-    
+
     existingQuestions.push(question);
     localStorage.setItem('questions', JSON.stringify(existingQuestions));
-    
+
     console.log('Question stored:', question);
 }
 
@@ -742,7 +742,7 @@ function resetForm() {
     document.getElementById('questionForm').reset();
     document.getElementById('questionType').value = 'mcq';
     document.getElementById('difficulty').value = 'easy';
-    
+
     // Reset question type selector
     document.querySelectorAll('.type-card').forEach(card => {
         card.classList.remove('active');
@@ -750,13 +750,13 @@ function resetForm() {
             card.classList.add('active');
         }
     });
-    
+
     // Show options section, hide coding sections
     const optionsSection = document.querySelector('.form-section:has(#optionsContainer)');
     const codingSections = document.getElementById('codingSections');
     if (optionsSection) optionsSection.style.display = 'block';
     if (codingSections) codingSections.style.display = 'none';
-    
+
     // Reset difficulty selector
     document.querySelectorAll('.difficulty-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -764,17 +764,17 @@ function resetForm() {
             btn.classList.add('active');
         }
     });
-    
+
     // Clear tags
     tagsArray = [];
     updateTagsDisplay();
-    
+
     // Clear image
     removeImage();
-    
+
     // Reset options
     regenerateOptions();
-    
+
     // Reset test cases
     const testCasesContainer = document.getElementById('testCasesContainer');
     if (testCasesContainer) {
@@ -782,7 +782,7 @@ function resetForm() {
         testCaseCounter = 0;
         addInitialTestCase();
     }
-    
+
     // Close preview
     closePreview();
 }
@@ -790,7 +790,7 @@ function resetForm() {
 function setupFormValidation() {
     // Real-time validation
     const requiredFields = ['category', 'questionText'];
-    
+
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (field) {
@@ -804,13 +804,13 @@ function setupFormValidation() {
 function validateField(field) {
     const isValid = field.value.trim() !== '';
     field.style.borderColor = isValid ? '#e9ecef' : '#dc3545';
-    
+
     // Remove any existing error message
     const existingError = field.parentNode.querySelector('.error-message');
     if (existingError) {
         existingError.remove();
     }
-    
+
     // Add error message if invalid
     if (!isValid) {
         const errorMsg = document.createElement('div');

@@ -3,14 +3,14 @@
 // Navigation functions
 function navigateTo(page) {
     console.log(`Navigating to: ${page}`);
-    
+
     // Show loading state
     showLoadingState();
-    
+
     // Simulate navigation delay
     setTimeout(() => {
         hideLoadingState();
-        
+
         switch(page) {
             case 'create-questions':
                 // Redirect to create questions page
@@ -41,7 +41,7 @@ function logout() {
         // Clear any stored session data
         localStorage.removeItem('userSession');
         sessionStorage.clear();
-        
+
         // Redirect to login page
         alert('Logging out...\n(This would redirect to login.html in a full implementation)');
         // window.location.href = 'login.html';
@@ -59,7 +59,7 @@ function showLoadingState() {
             <p>Loading...</p>
         </div>
     `;
-    
+
     // Add loading styles
     loadingOverlay.style.cssText = `
         position: fixed;
@@ -73,7 +73,7 @@ function showLoadingState() {
         align-items: center;
         z-index: 9999;
     `;
-    
+
     const spinner = document.createElement('style');
     spinner.innerHTML = `
         .loading-spinner {
@@ -97,7 +97,7 @@ function showLoadingState() {
             font-weight: 500;
         }
     `;
-    
+
     document.head.appendChild(spinner);
     document.body.appendChild(loadingOverlay);
 }
@@ -117,7 +117,7 @@ function updateStats() {
         { selector: '.stat-card:nth-child(3) h3', value: Math.floor(Math.random() * 500) + 200 },
         { selector: '.stat-card:nth-child(4) h3', value: Math.floor(Math.random() * 30) + 70 + '%' }
     ];
-    
+
     stats.forEach(stat => {
         const element = document.querySelector(stat.selector);
         if (element) {
@@ -129,11 +129,11 @@ function updateStats() {
 // Add animation to cards
 function animateCards() {
     const cards = document.querySelectorAll('.action-card, .stat-card');
-    
+
     cards.forEach((card, index) => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(20px)';
-        
+
         setTimeout(() => {
             card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
             card.style.opacity = '1';
@@ -145,12 +145,12 @@ function animateCards() {
 // Add hover effects to action cards
 function addHoverEffects() {
     const actionCards = document.querySelectorAll('.action-card');
-    
+
     actionCards.forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-4px) scale(1.02)';
         });
-        
+
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0) scale(1)';
         });
@@ -160,23 +160,23 @@ function addHoverEffects() {
 // Initialize dashboard
 function initDashboard() {
     console.log('Teacher Dashboard initialized');
-    
+
     // Animate cards on load
     animateCards();
-    
+
     // Add hover effects
     addHoverEffects();
-    
+
     // Update stats every 30 seconds
     setInterval(updateStats, 30000);
-    
+
     // Add keyboard navigation
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
             hideLoadingState();
         }
     });
-    
+
     // Add click analytics
     document.querySelectorAll('.action-card').forEach((card, index) => {
         card.addEventListener('click', function() {
@@ -207,7 +207,7 @@ function refreshActivityFeed() {
             score: null
         }
     ];
-    
+
     const activityList = document.querySelector('.activity-list');
     if (activityList) {
         // Randomly update activities (for demo purposes)
@@ -217,7 +217,7 @@ function refreshActivityFeed() {
             if (firstActivity) {
                 firstActivity.querySelector('.activity-content p').innerHTML = randomActivity.text;
                 firstActivity.querySelector('.activity-time').textContent = randomActivity.time;
-                
+
                 // Update score if available
                 const scoreBadge = firstActivity.querySelector('.score-badge');
                 if (randomActivity.score && scoreBadge) {
@@ -225,7 +225,7 @@ function refreshActivityFeed() {
                 } else if (scoreBadge) {
                     scoreBadge.style.display = 'none';
                 }
-                
+
                 // Add flash effect
                 firstActivity.style.background = '#e8f5e8';
                 setTimeout(() => {
@@ -240,7 +240,7 @@ function refreshActivityFeed() {
 function showWelcomeMessage() {
     const currentHour = new Date().getHours();
     let greeting;
-    
+
     if (currentHour < 12) {
         greeting = 'Good Morning';
     } else if (currentHour < 18) {
@@ -248,7 +248,7 @@ function showWelcomeMessage() {
     } else {
         greeting = 'Good Evening';
     }
-    
+
     const welcomeText = document.querySelector('.welcome-text');
     if (welcomeText) {
         welcomeText.textContent = `${greeting}, Professor`;
@@ -267,7 +267,7 @@ window.addEventListener('resize', function() {
     // Adjust layout for mobile devices
     const isMobile = window.innerWidth < 768;
     const actionCards = document.querySelectorAll('.action-card');
-    
+
     actionCards.forEach(card => {
         if (isMobile) {
             card.style.minHeight = 'auto';

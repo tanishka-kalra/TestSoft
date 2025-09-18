@@ -941,7 +941,7 @@ textarea {
     .header {
         padding: 1rem 2rem;
     }
-    
+
     .main-content {
         padding: 2rem;
     }
@@ -951,7 +951,7 @@ textarea {
     .preview-panel {
         width: 350px;
     }
-    
+
     .question-type-selector {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     }
@@ -962,40 +962,40 @@ textarea {
         flex-direction: column;
         gap: 1rem;
     }
-    
+
     .main-content {
         padding: 1rem;
     }
-    
+
     .page-header h2 {
         font-size: 2rem;
     }
-    
+
     .question-type-selector {
         grid-template-columns: 1fr;
     }
-    
+
     .difficulty-selector {
         flex-direction: column;
     }
-    
+
     .io-format-grid, .evaluation-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .test-case-content {
         grid-template-columns: 1fr;
     }
-    
+
     .form-actions {
         flex-direction: column;
     }
-    
+
     .preview-panel {
         width: 100%;
         right: -100%;
     }
-    
+
     .modal-content {
         width: 95%;
         margin: 0 1rem;

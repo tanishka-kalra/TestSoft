@@ -25,21 +25,21 @@ function setupEventListeners() {
     // Search input
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', debounce(handleSearch, 300));
-    
+
     // Filter selects
     document.getElementById('categoryFilter').addEventListener('change', applyFilters);
     document.getElementById('sortBy').addEventListener('change', applySorting);
-    
+
     // Difficulty checkboxes
     document.querySelectorAll('.difficulty-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', applyFilters);
     });
-    
+
     // Type checkboxes
     document.querySelectorAll('.type-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', applyFilters);
     });
-    
+
     // Select all checkbox
     document.getElementById('selectAll').addEventListener('change', handleSelectAll);
 }
@@ -47,7 +47,7 @@ function setupEventListeners() {
 function loadQuestions() {
     // Load questions from localStorage (simulating API call)
     const storedQuestions = localStorage.getItem('questions');
-    
+
     if (storedQuestions) {
         allQuestions = JSON.parse(storedQuestions);
     } else {
@@ -55,7 +55,7 @@ function loadQuestions() {
         allQuestions = generateSampleQuestions();
         localStorage.setItem('questions', JSON.stringify(allQuestions));
     }
-    
+
     filteredQuestions = [...allQuestions];
     updateDisplay();
 }
@@ -153,20 +153,20 @@ function generateSampleQuestions() {
             createdBy: 'Professor'
         }
     ];
-    
+
     return sampleQuestions;
 }
 
 function handleSearch() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const clearBtn = document.querySelector('.clear-search');
-    
+
     if (searchTerm) {
         clearBtn.style.display = 'block';
     } else {
         clearBtn.style.display = 'none';
     }
-    
+
     applyFilters();
 }
 
@@ -181,32 +181,32 @@ function applyFilters() {
     const category = document.getElementById('categoryFilter').value;
     const selectedDifficulties = Array.from(document.querySelectorAll('.difficulty-checkbox:checked')).map(cb => cb.value);
     const selectedTypes = Array.from(document.querySelectorAll('.type-checkbox:checked')).map(cb => cb.value);
-    
+
     filteredQuestions = allQuestions.filter(question => {
         // Search filter
-        if (searchTerm && !question.questionText.toLowerCase().includes(searchTerm) && 
+        if (searchTerm && !question.questionText.toLowerCase().includes(searchTerm) &&
             !question.tags.some(tag => tag.toLowerCase().includes(searchTerm))) {
             return false;
         }
-        
+
         // Category filter
         if (category && question.category !== category) {
             return false;
         }
-        
+
         // Difficulty filter
         if (selectedDifficulties.length > 0 && !selectedDifficulties.includes(question.difficulty)) {
             return false;
         }
-        
+
         // Type filter
         if (selectedTypes.length > 0 && !selectedTypes.includes(question.questionType)) {
             return false;
         }
-        
+
         return true;
     });
-    
+
     applySorting();
     currentPage = 1;
     updateDisplay();
@@ -214,7 +214,7 @@ function applyFilters() {
 
 function applySorting() {
     const sortBy = document.getElementById('sortBy').value;
-    
+
     filteredQuestions.sort((a, b) => {
         switch (sortBy) {
             case 'newest':
@@ -238,26 +238,26 @@ function clearAllFilters() {
     // Clear search
     document.getElementById('searchInput').value = '';
     document.querySelector('.clear-search').style.display = 'none';
-    
+
     // Clear category
     document.getElementById('categoryFilter').value = '';
-    
+
     // Clear difficulty checkboxes
     document.querySelectorAll('.difficulty-checkbox').forEach(cb => cb.checked = false);
-    
+
     // Clear type checkboxes
     document.querySelectorAll('.type-checkbox').forEach(cb => cb.checked = false);
-    
+
     // Reset sort
     document.getElementById('sortBy').value = 'newest';
-    
+
     // Apply filters
     applyFilters();
 }
 
 function switchView(viewType) {
     currentView = viewType;
-    
+
     // Update view buttons
     document.querySelectorAll('.view-btn').forEach(btn => {
         btn.classList.remove('active');
@@ -265,7 +265,7 @@ function switchView(viewType) {
             btn.classList.add('active');
         }
     });
-    
+
     renderQuestions();
 }
 
@@ -274,11 +274,11 @@ function updateDisplay() {
     renderQuestions();
     renderPagination();
     updateBulkActions();
-    
+
     // Show/hide empty state
     const emptyState = document.getElementById('emptyState');
     const questionsSection = document.querySelector('.questions-section');
-    
+
     if (filteredQuestions.length === 0) {
         emptyState.style.display = 'block';
         questionsSection.style.display = 'none';
@@ -299,7 +299,7 @@ function renderQuestions() {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const questionsToShow = filteredQuestions.slice(startIndex, endIndex);
-    
+
     if (currentView === 'card') {
         container.innerHTML = `<div class="questions-grid">${questionsToShow.map(renderQuestionCard).join('')}</div>`;
     } else {
@@ -318,7 +318,7 @@ function renderQuestions() {
             </div>
         `;
     }
-    
+
     // Attach event listeners
     attachQuestionEventListeners();
 }
@@ -334,17 +334,17 @@ function renderQuestionCard(question) {
         'mcq': 'Single Choice',
         'multiselect': 'Multiple Choice'
     };
-    
+
     const isSelected = selectedQuestions.has(question.id);
     const correctCount = question.correctAnswers.length;
     const totalOptions = question.options.length;
-    
+
     return `
         <div class="question-card ${isSelected ? 'selected' : ''}" data-question-id="${question.id}">
             <div class="question-select">
                 <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleQuestionSelection(${question.id})">
             </div>
-            
+
             <div class="question-header">
                 <div class="question-meta">
                     <div class="category-badge">${categoryName}</div>
@@ -354,14 +354,14 @@ function renderQuestionCard(question) {
                     <div class="question-type">${typeNames[question.questionType]}</div>
                 </div>
             </div>
-            
+
             <div class="question-content" onclick="viewQuestion(${question.id})">
                 <div class="question-text">${question.questionText}</div>
                 <div class="question-options-count">
                     ${totalOptions} options • ${correctCount} correct answer${correctCount !== 1 ? 's' : ''}
                 </div>
             </div>
-            
+
             <div class="question-footer">
                 <div class="question-tags">
                     ${question.tags.slice(0, 3).map(tag => `<span class="tag-mini">${tag}</span>`).join('')}
@@ -376,7 +376,7 @@ function renderQuestionCard(question) {
                     </button>
                 </div>
             </div>
-            
+
             <div class="question-date">
                 Created: ${formatDate(question.createdAt)}
             </div>
@@ -395,9 +395,9 @@ function renderQuestionRow(question) {
         'mcq': 'Single',
         'multiselect': 'Multi'
     };
-    
+
     const isSelected = selectedQuestions.has(question.id);
-    
+
     return `
         <div class="question-row ${isSelected ? 'selected' : ''}" data-question-id="${question.id}">
             <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleQuestionSelection(${question.id})">
@@ -428,7 +428,7 @@ function attachQuestionEventListeners() {
             if (e.target.type === 'checkbox' || e.target.closest('button') || e.target.closest('.question-actions')) {
                 return;
             }
-            
+
             const questionId = parseInt(this.dataset.questionId);
             viewQuestion(questionId);
         });
@@ -438,21 +438,21 @@ function attachQuestionEventListeners() {
 function renderPagination() {
     const pagination = document.getElementById('pagination');
     const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage);
-    
+
     if (totalPages <= 1) {
         pagination.innerHTML = '';
         return;
     }
-    
+
     let paginationHtml = '';
-    
+
     // Previous button
     paginationHtml += `
         <button ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
             <i class="fas fa-chevron-left"></i>
         </button>
     `;
-    
+
     // Page numbers
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
@@ -465,14 +465,14 @@ function renderPagination() {
             paginationHtml += '<span>...</span>';
         }
     }
-    
+
     // Next button
     paginationHtml += `
         <button ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
             <i class="fas fa-chevron-right"></i>
         </button>
     `;
-    
+
     pagination.innerHTML = paginationHtml;
 }
 
@@ -488,7 +488,7 @@ function toggleQuestionSelection(questionId) {
     } else {
         selectedQuestions.add(questionId);
     }
-    
+
     updateDisplay();
     updateSelectAllCheckbox();
 }
@@ -499,13 +499,13 @@ function handleSelectAll() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-    
+
     if (selectAllCheckbox.checked) {
         questionsOnPage.forEach(q => selectedQuestions.add(q.id));
     } else {
         questionsOnPage.forEach(q => selectedQuestions.delete(q.id));
     }
-    
+
     updateDisplay();
 }
 
@@ -515,9 +515,9 @@ function updateSelectAllCheckbox() {
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
-    
+
     const selectedOnPage = questionsOnPage.filter(q => selectedQuestions.has(q.id)).length;
-    
+
     if (selectedOnPage === 0) {
         selectAllCheckbox.checked = false;
         selectAllCheckbox.indeterminate = false;
@@ -533,7 +533,7 @@ function updateSelectAllCheckbox() {
 function updateBulkActions() {
     const bulkActions = document.getElementById('bulkActions');
     const selectedCount = document.getElementById('selectedCount');
-    
+
     if (selectedQuestions.size > 0) {
         bulkActions.style.display = 'flex';
         selectedCount.textContent = selectedQuestions.size;
@@ -546,10 +546,10 @@ function viewQuestion(questionId) {
     currentQuestionId = questionId;
     const question = allQuestions.find(q => q.id === questionId);
     if (!question) return;
-    
+
     const modal = document.getElementById('questionModal');
     const content = document.getElementById('questionDetailContent');
-    
+
     const categoryName = question.category.replace('-', ' ').toUpperCase();
     const difficultyStars = {
         'easy': '★',
@@ -560,7 +560,7 @@ function viewQuestion(questionId) {
         'mcq': 'Single Choice Question',
         'multiselect': 'Multiple Choice Question'
     };
-    
+
     content.innerHTML = `
         <div class="question-detail">
             <div class="question-meta-detail">
@@ -568,7 +568,7 @@ function viewQuestion(questionId) {
                     <strong>Category:</strong> ${categoryName}
                 </div>
                 <div class="meta-item">
-                    <strong>Difficulty:</strong> 
+                    <strong>Difficulty:</strong>
                     <span class="difficulty-badge ${question.difficulty}">
                         ${difficultyStars[question.difficulty]} ${question.difficulty.toUpperCase()}
                     </span>
@@ -580,12 +580,12 @@ function viewQuestion(questionId) {
                     <strong>Created:</strong> ${formatDate(question.createdAt)}
                 </div>
             </div>
-            
+
             <div class="question-text-detail">
                 <h4>Question:</h4>
                 <p>${question.questionText}</p>
             </div>
-            
+
             <div class="options-detail">
                 <h4>Options:</h4>
                 <div class="options-list">
@@ -598,14 +598,14 @@ function viewQuestion(questionId) {
                     `).join('')}
                 </div>
             </div>
-            
+
             ${question.explanation ? `
                 <div class="explanation-detail">
                     <h4>Explanation:</h4>
                     <p>${question.explanation}</p>
                 </div>
             ` : ''}
-            
+
             ${question.tags.length > 0 ? `
                 <div class="tags-detail">
                     <h4>Tags:</h4>
@@ -616,7 +616,7 @@ function viewQuestion(questionId) {
             ` : ''}
         </div>
     `;
-    
+
     modal.classList.add('show');
 }
 
@@ -637,11 +637,11 @@ function deleteQuestion() {
     if (currentQuestionId && confirm('Are you sure you want to delete this question?')) {
         allQuestions = allQuestions.filter(q => q.id !== currentQuestionId);
         localStorage.setItem('questions', JSON.stringify(allQuestions));
-        
+
         selectedQuestions.delete(currentQuestionId);
         closeModal();
         applyFilters(); // Refresh the display
-        
+
         showNotification('Question deleted successfully', 'success');
     }
 }
@@ -650,10 +650,10 @@ function deleteQuestionConfirm(questionId) {
     if (confirm('Are you sure you want to delete this question?')) {
         allQuestions = allQuestions.filter(q => q.id !== questionId);
         localStorage.setItem('questions', JSON.stringify(allQuestions));
-        
+
         selectedQuestions.delete(questionId);
         applyFilters(); // Refresh the display
-        
+
         showNotification('Question deleted successfully', 'success');
     }
 }
@@ -663,16 +663,16 @@ function exportSelected() {
         alert('Please select questions to export');
         return;
     }
-    
+
     const questionsToExport = allQuestions.filter(q => selectedQuestions.has(q.id));
     const dataStr = JSON.stringify(questionsToExport, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    
+
     const link = document.createElement('a');
     link.href = URL.createObjectURL(dataBlob);
     link.download = `questions_export_${new Date().getTime()}.json`;
     link.click();
-    
+
     showNotification(`${selectedQuestions.size} questions exported successfully`, 'success');
 }
 
@@ -681,15 +681,15 @@ function deleteSelected() {
         alert('Please select questions to delete');
         return;
     }
-    
+
     if (confirm(`Are you sure you want to delete ${selectedQuestions.size} selected questions?`)) {
         allQuestions = allQuestions.filter(q => !selectedQuestions.has(q.id));
         localStorage.setItem('questions', JSON.stringify(allQuestions));
-        
+
         const deletedCount = selectedQuestions.size;
         selectedQuestions.clear();
         applyFilters(); // Refresh the display
-        
+
         showNotification(`${deletedCount} questions deleted successfully`, 'success');
     }
 }
@@ -724,7 +724,7 @@ function showNotification(message, type = 'info') {
         <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
         <span>${message}</span>
     `;
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -741,9 +741,9 @@ function showNotification(message, type = 'info') {
         z-index: 3000;
         animation: slideInRight 0.3s ease;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Remove after 3 seconds
     setTimeout(() => {
         notification.remove();
