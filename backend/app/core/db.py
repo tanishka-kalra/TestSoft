@@ -10,9 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from fastapi import HTTPException
 
 try:
-    engine = create_engine(
-        "postgresql://myuser:ViratKohli%4005@localhost/testsoft"
-    )
+    engine = create_engine("postgresql://myuser:ViratKohli%4005@localhost/testsoft")
     SessionLocal = sessionmaker(
         autocommit=False, autoflush=False, bind=engine, expire_on_commit=False
     )
@@ -31,4 +29,3 @@ async def get_db():
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     finally:
         db.close()
-
